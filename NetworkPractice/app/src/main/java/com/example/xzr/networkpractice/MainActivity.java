@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         sendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendRequestWithOKHttp();
+                sendRequestWithHttpURLConnection();
             }
         });
 
@@ -119,38 +119,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 HttpURLConnection connection = null;
-                BufferedReader reader = null;
 
-                try {
-                    URL url = new URL("https://google.com");
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");
-                    connection.setConnectTimeout(8000);
-                    connection.setReadTimeout(8000);
-                    InputStream in = connection.getInputStream();
-                    reader = new BufferedReader(new InputStreamReader(in));
-                    StringBuilder response = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        response.append(line);
-                    }
-                    Log.i(TAG, "run: ");
-                    showResponse(response.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }finally {
-                    if (reader != null) {
-                        try{
-                            reader.close();
-                        }catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    String address = "https://tooxu.github.io/data.xml";
+                    String response = HttpTool.sendHttpRequest(address);
 
-                    if (connection != null) {
-                        connection.disconnect();
-                    }
-                }
+                    Log.i(TAG, "run: " + "sendHttpRequest");
+                    showResponse(response);
             }
         }).start();
     }
