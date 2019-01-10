@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         sendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendRequestWithHttpURLConnection();
+                sendRequestWithPackageOkHttp();
             }
         });
 
@@ -72,6 +73,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private void sendRequestWithPackageOkHttp() {
+        HttpTool.sendOkHttpRequest("http://www.baidu.com",new okhttp3.Callback(){
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "onFailure: " + e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseData = response.body().string();
+                Log.i(TAG, "onResponse: " + responseData);
+            }
+        });
     }
 
     private void parseXMLWithPull(String responseData) {
