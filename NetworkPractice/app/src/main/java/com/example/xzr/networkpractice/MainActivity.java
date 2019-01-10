@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -19,6 +22,7 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -52,14 +56,17 @@ public class MainActivity extends AppCompatActivity {
                     OkHttpClient client = new OkHttpClient();
                     Request request = new Request.Builder()
 //                            .url("https://google.com")
-                            .url("https://tooxu.github.io/data.xml")
+//                            .url("https://tooxu.github.io/data.xml")
+                            .url("https://tooxu.github.io/jsonData.json")
                             .build();
+
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
 
 //                    showResponse(responseData);
                     Log.i(TAG, "run: " + responseData);
-                    parseXMLWithPull(responseData);
+//                    parseXMLWithPull(responseData);
+                    parseJSONWithGSON(responseData);
                 }catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -159,4 +166,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    private void parseJSONWithGSON(String jsonData) {
+        Gson gson = new Gson();
+        List<ShareInfo> infoList = gson.fromJson(jsonData,new TypeToken<List<ShareInfo>>(){}.getType());
+        for (ShareInfo info : infoList ) {
+            Log.i(TAG, "parseJSONWithGSON: "+info.getText());
+            Log.i(TAG, "parseJSONWithGSON: "+ info.getAction());
+            Log.i(TAG, "parseJSONWithGSON: "+ info.getIcon());
+            Log.i(TAG, "parseJSONWithGSON: "+ info.getShow_style());
+        }
+    }
 }
+
+
