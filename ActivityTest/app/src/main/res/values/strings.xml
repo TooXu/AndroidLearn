@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ActivityTest</string>
+    <string name="dealloc">Dealloc D</string>
+    <string name="thirdButton">third Button</string>
+</resources>
