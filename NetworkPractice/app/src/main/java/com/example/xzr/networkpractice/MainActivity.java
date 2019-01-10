@@ -120,11 +120,23 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 HttpURLConnection connection = null;
 
-                    String address = "https://tooxu.github.io/data.xml";
-                    String response = HttpTool.sendHttpRequest(address);
+                    String address = "https://www.baidu.com";
+                    HttpTool.sendHttpRequest(address, new HttpCallbackListener() {
+                        @Override
+                        public void onFinish(String response) {
+                            //
+                            showResponse(response);
+
+                            Log.i(TAG, "onFinish: " + response);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Log.i(TAG, "onError: " + e);
+                        }
+                    });
 
                     Log.i(TAG, "run: " + "sendHttpRequest");
-                    showResponse(response);
             }
         }).start();
     }
