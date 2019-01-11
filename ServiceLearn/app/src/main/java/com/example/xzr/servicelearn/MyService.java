@@ -1,10 +1,21 @@
 package com.example.xzr.servicelearn;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 public class MyService extends Service {
     private static final String TAG = "MyService";
@@ -17,6 +28,35 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "onCreate: ");
+        super.onCreate();
+        Log.i(TAG, "onCreate:  "+ Build.VERSION.SDK_INT + Build.VERSION_CODES.O);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startMyOwnForeground();
+        } else {
+            startForeground(1, new Notification());
+        }
+
+    }
+
+
+    private void startMyOwnForeground(){
+        String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
+        String channelName = "My Background Service";
+        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert manager != null;
+        manager.createNotificationChannel(chan);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("App is running in background")
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build();
+        startForeground(2, notification);
     }
     // 服务一旦启动就立刻去执行某个动作
     // 每次 startService 都会执行
